@@ -1,4 +1,4 @@
-name: Deploy Altair.ai to AWS
+name: Deploy to AWS
 
 on:
   workflow_dispatch:
