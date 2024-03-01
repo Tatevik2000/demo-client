@@ -3,7 +3,7 @@ name: Deploy Altair.ai to AWS
 on:
   workflow_dispatch:
     branches:
-      - develop
+      - main
 
 jobs:
   
