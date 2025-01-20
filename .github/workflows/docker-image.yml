@@ -1,18 +1,47 @@
-name: Docker Image CI
+name: Snyk Vulnerability Scan
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-
-  build:
-
+  snyk-scan:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      # Checkout the code repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Choose the appropriate version for your project
+
+      # Install project dependencies (Frontend dependencies in node_modules)
+      - name: Install Dependencies
+        run: npm install
+
+      # Install Snyk globally
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      # Authenticate with Snyk (using an API token)
+      - name: Snyk Authentication
+        run: snyk auth ${{ secrets.SNYK_API_TOKEN }}
+
+      # Run Snyk test to check for vulnerabilities in dependencies
+      - name: Run Snyk Test
+        run: snyk test --all-projects --json > snyk-report.json
+
+      # Upload Snyk Report as Artifact for further inspection
+      - name: Upload Snyk Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: snyk-report
+          path: snyk-report.json
