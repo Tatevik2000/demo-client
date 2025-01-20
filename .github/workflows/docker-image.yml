@@ -33,7 +33,7 @@ jobs:
 
       # Authenticate with Snyk (using an API token)
       - name: Snyk Authentication
-        run: snyk auth ${{ secrets.SNYK_API_TOKEN }}
+        run: snyk auth 3c51d740-8bd9-4e77-8489-1a6e43999904
 
       # Run Snyk test to check for vulnerabilities in dependencies
       - name: Run Snyk Test
